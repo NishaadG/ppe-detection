@@ -1,0 +1,9 @@
+raw/
+data/
+runs/
+results/*_test/
+*.pt
+!space/best.pt
+kaggle.json
+__pycache__/
+.ipynb_checkpoints/
