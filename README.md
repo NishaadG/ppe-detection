@@ -67,7 +67,23 @@ Four public Kaggle datasets, merged into one 8-class dataset in YOLO format by `
 - Best run: YOLOv8s baseline. `goggles` improved from 0.63 in v1 to 0.74.
 - Repeat-factor sampling raised recall (0.703 to 0.732) and `no-mask` AP but did not change overall mAP.
 - `no-goggles` is still not learned (45 test objects; the model labels them background).
-- All three runs scored their best validation mAP at the last epoch, so longer training should help.
+- All three runs scored their best validation mAP at the last epoch, so they were retrained for longer (below).
+
+**Longer training** (same settings, `EPOCHS = 75`, early stopping with patience 10). Both runs stopped early: baseline after 60 epochs (best at 50), balanced after 61 (best at 51), about 5.5 h on a T4 in total.
+
+| Metric (test split, 1,113 images) | Baseline, 25 ep | Baseline, 60 ep | Balanced, 25 ep | Balanced, 61 ep |
+|---|---|---|---|---|
+| mAP@0.5 | 0.756 | **0.762** | 0.755 | 0.755 |
+| mAP@0.5:0.95 | **0.484** | 0.483 | 0.480 | 0.476 |
+| Precision | 0.747 | 0.752 | 0.752 | 0.766 |
+| Recall | 0.703 | 0.731 | 0.732 | 0.709 |
+| AP@0.5 goggles | 0.738 | 0.731 | 0.719 | 0.729 |
+| AP@0.5 no-vest | 0.821 | 0.861 | 0.807 | 0.858 |
+| AP@0.5 no-goggles | 0.045 | 0.052 | 0.040 | 0.044 |
+| AP@0.5 no-mask | 0.758 | 0.766 | 0.788 | 0.743 |
+
+- Training longer gave small gains for the baseline (recall 0.703 to 0.731, `no-vest` 0.821 to 0.861) and left mAP@0.5:0.95 flat; the models converge around epoch 50.
+- `no-goggles` stays near zero however long the model trains, so it needs more labelled examples rather than more epochs.
 
 ### v1 (first version: YOLOv5s, 12 epochs, random 70/20/10 split of 7,093 images)
 
