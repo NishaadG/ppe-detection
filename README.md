@@ -2,7 +2,7 @@
 
 Object detection for construction-site safety. The model finds hard hats, safety vests, goggles and masks, **and flags when one is missing**, so a photo or camera frame can be checked for violations.
 
-**Demo:** _Hugging Face Space link (add after deploying)_
+**Demo:** [huggingface.co/spaces/NishaadG/ppe-detection](https://huggingface.co/spaces/NishaadG/ppe-detection) (runs in your browser, photos stay on your device)
 
 ## Classes
 
@@ -109,4 +109,6 @@ python evaluate.py --data data/ppe.yaml --runs runs/detect/train --out results
 
 ## Demo app
 
-`space/` holds a Gradio app for Hugging Face Spaces. It draws the detections and lists any missing gear. To deploy, copy `best.pt` into `space/` and push the folder to a new Gradio Space.
+The live demo is `space/web/`: a static page that runs the best model (YOLOv8s baseline, 60 epochs) in the browser with ONNX Runtime Web. It draws the detections and lists any missing gear. To rebuild the model file: `yolo export model=best.pt format=onnx imgsz=640 opset=12`, then upload `index.html`, `README.md` and the exported file as `model.onnx` to a static Space.
+
+`space/app.py` is the same demo as a Gradio app, for running locally (`python space/app.py` with `best.pt` in `space/`) or on a paid Gradio Space.
