@@ -34,7 +34,7 @@ Four public Kaggle datasets, merged into one 8-class dataset in YOLO format by `
 
 ## Training and evaluation
 
-`train_colab.ipynb` runs everything on a free Colab T4 and saves results to Google Drive:
+`train_colab.ipynb` runs everything on a free Colab T4 and saves results to Google Drive (`train_kaggle.ipynb` does the same on Kaggle):
 
 1. **Baseline:** YOLOv8s on the plain training split
 2. **Balanced:** YOLOv8s with repeat-factor sampling for the rare classes
@@ -45,7 +45,29 @@ Four public Kaggle datasets, merged into one 8-class dataset in YOLO format by `
 ## Results
 
 ### v2 (this repo, stratified split)
-_Table from `results/comparison.md` goes here._
+
+25 epochs per run, imgsz 640, batch 16, seed 42, on a Kaggle T4 (`train_kaggle.ipynb`). Dataset: 11,126 images (7,788 train / 2,225 valid / 1,113 test), 41,887 objects.
+
+| Metric (test split, 1,113 images) | YOLOv8s baseline | YOLOv8s balanced | YOLOv5s |
+|---|---|---|---|
+| mAP@0.5 | **0.756** | 0.755 | 0.755 |
+| mAP@0.5:0.95 | **0.484** | 0.480 | 0.471 |
+| Precision | 0.747 | 0.752 | 0.874 |
+| Recall | 0.703 | 0.732 | 0.706 |
+| AP@0.5 hardhat | 0.959 | 0.960 | 0.956 |
+| AP@0.5 vest | 0.931 | 0.933 | 0.920 |
+| AP@0.5 goggles | 0.738 | 0.719 | 0.704 |
+| AP@0.5 mask | 0.936 | 0.938 | 0.933 |
+| AP@0.5 no-hardhat | 0.860 | 0.852 | 0.862 |
+| AP@0.5 no-vest | 0.821 | 0.807 | 0.796 |
+| AP@0.5 no-goggles | 0.045 | 0.040 | 0.040 |
+| AP@0.5 no-mask | 0.758 | 0.788 | 0.826 |
+| Inference ms/image (T4) | 10.9 | 11.2 | 9.2 |
+
+- Best run: YOLOv8s baseline. `goggles` improved from 0.63 in v1 to 0.74.
+- Repeat-factor sampling raised recall (0.703 to 0.732) and `no-mask` AP but did not change overall mAP.
+- `no-goggles` is still not learned (45 test objects; the model labels them background).
+- All three runs scored their best validation mAP at the last epoch, so longer training should help.
 
 ### v1 (first version: YOLOv5s, 12 epochs, random 70/20/10 split of 7,093 images)
 
